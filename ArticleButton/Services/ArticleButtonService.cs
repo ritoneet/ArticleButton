@@ -9,7 +9,7 @@ namespace ArticleButton.Services
 
             return
             [
-                new ArticleButtonModel { Text = "All", Image = "logo_handje.png", Action = "Filter" },
+                new ArticleButtonModel { Text = "All", Image = "logo.png", Action = "Filter" },
             ];
         }
     }

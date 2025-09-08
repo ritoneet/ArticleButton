@@ -1,6 +1,6 @@
 ﻿namespace ArticleButton.Models
 {
-    class ArticleButtonModel
+    public class ArticleButtonModel
     {
         public int Id { get; set; }
         public string Text { get; set; } = string.Empty;
