@@ -1,4 +1,5 @@
 ﻿using ArticleButton.Models;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace ArticleButton.Controls;
 
@@ -8,7 +9,7 @@ public partial class ArticleButtonControl : ContentView
     private readonly ScrollView? _scroller;
     private readonly List<Button> _buttons = [];
     private Button? _selectedButton;
-    private const double ScrollStep = 220;
+    private const double ScrollStep = 420;
 
     public ArticleButtonControl()
     {
@@ -21,26 +22,58 @@ public partial class ArticleButtonControl : ContentView
             Content = _buttonGrid
         };
 
-        var leftArrow = new Button
+        var leftArrow = new ContentView
         {
-            Text = "◄",
+            VerticalOptions = LayoutOptions.Center,
+            HorizontalOptions = LayoutOptions.Start,
             WidthRequest = 40,
             HeightRequest = 40,
-            Margin = new Thickness(10, 0, 5, 0),
-            BackgroundColor = Colors.Transparent
-        };
-        leftArrow.Clicked += OnLeftArrowClicked;
-
-        var rightArrow = new Button
-        {
-            Text = "►",
-            WidthRequest = 40,
-            HeightRequest = 40,
-            Margin = new Thickness(5, 0, 10, 0),
             BackgroundColor = Colors.Transparent,
-            HorizontalOptions = LayoutOptions.Start
+            Content = new Polygon
+            {
+                Points = new PointCollection
+                {
+                    new Point(25, 10),
+                    new Point(25, 30),
+                    new Point(10, 20)
+                },
+                BackgroundColor = Application.Current?.Resources["BlueArrow"] as Color ?? Colors.Blue,
+            }
         };
-        rightArrow.Clicked += OnRightArrowClicked;
+
+        leftArrow.GestureRecognizers.Add(new TapGestureRecognizer
+        {
+            Command = new Command(() =>
+            {
+                OnLeftArrowClicked(leftArrow, EventArgs.Empty);
+            })
+        });
+
+        var rightArrow = new ContentView
+        {
+            VerticalOptions = LayoutOptions.Center,
+            HorizontalOptions = LayoutOptions.Start,
+            WidthRequest = 40,
+            HeightRequest = 40,
+            BackgroundColor = Colors.Transparent,
+            Content = new Polygon
+            {
+                Points = new PointCollection
+                {
+                    new Point(15, 10),
+                    new Point(15, 30),
+                    new Point(30, 20)
+                },
+                BackgroundColor = Application.Current?.Resources["BlueArrow"] as Color ?? Colors.Blue,
+            }
+        };
+        rightArrow.GestureRecognizers.Add(new TapGestureRecognizer
+        {
+            Command = new Command(() =>
+            {
+                OnRightArrowClicked(rightArrow, EventArgs.Empty);
+            })
+        });
 
         var layout = new Grid
         {   

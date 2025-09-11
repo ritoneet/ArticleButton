@@ -11,6 +11,8 @@
     <Color x:Key="BorderColor">#D1D1D1</Color>
     <Color x:Key="ActiveButton">#95C11F</Color>
     <Color x:Key="HowerActive">#B5D463</Color>
+    <Color x:Key="BlueArrow">#005FA6</Color>
+    <Color x:Key="HowerBlueArrow">#4D8FC1</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
