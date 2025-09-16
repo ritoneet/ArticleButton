@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui; // <-- Add this using directive
+﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace ArticleButton
@@ -10,7 +10,7 @@ namespace ArticleButton
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkit() // <-- This now works because of the using above
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
