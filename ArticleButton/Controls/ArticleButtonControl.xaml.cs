@@ -8,10 +8,10 @@ public partial class ArticleButtonControl : ContentView
     private readonly ScrollView? _scroller;
     private readonly List<Button> _buttons = [];
     private Button? _selectedButton;
-    private const double ScrollStep = 20;
-    static double scale = 0.2;
-    double w = 75 * scale;
-    double h = 116 * scale;
+    private const double ScrollStep = 420;
+    readonly static double scale = 0.2;
+    readonly double w = 75 * scale;
+    readonly double h = 116 * scale;
 #if WINDOWS
     bool leftArrowEnabled = true;
     bool rightArrowEnabled = true;
@@ -21,7 +21,7 @@ public partial class ArticleButtonControl : ContentView
 
     public ArticleButtonControl()
     {
-        var pointer = new PointerGestureRecognizer();
+        _ = new PointerGestureRecognizer();
         _buttonGrid = new Grid { HeightRequest = 54 };
         var leftArrowContainer = CreateArrow(isLeft: true);
         var rightArrowContainer = CreateArrow(isLeft: false);
@@ -80,19 +80,28 @@ public partial class ArticleButtonControl : ContentView
         };
 
         container.Children.Add(polygon);
-        
+
         polygon.TranslationY = isLeft ? 15 : 15;
         polygon.TranslationX = isLeft ? 20 : 20;
 
-        var tap = new TapGestureRecognizer();
-        tap.Tapped += (s, e) =>
+        var tapOnce = new TapGestureRecognizer() { NumberOfTapsRequired = 1 };
+        var tapDouble = new TapGestureRecognizer { NumberOfTapsRequired = 2 };
+        tapOnce.Tapped += async (s, e) =>
         {
             if (isLeft)
-                OnLeftArrowClicked();
+                await OnLeftArrowClicked();
             else
-                OnRightArrowClicked();
+                await OnRightArrowClicked();
         };
-        container.GestureRecognizers.Add(tap);
+        tapDouble.Tapped += async (s, e) =>
+        {
+            if (isLeft)
+                await ScrollToStart();
+            else
+                await ScrollToEnd();
+        };
+        container.GestureRecognizers.Add(tapOnce);
+        container.GestureRecognizers.Add(tapDouble);
 
 #if WINDOWS
         // Hover только на Windows
@@ -103,14 +112,14 @@ public partial class ArticleButtonControl : ContentView
 #endif
         return container;
     }
-    private async void OnLeftArrowClicked()
+    private async Task OnLeftArrowClicked()
     {
         if (_scroller == null) return;
         double x = Math.Max(0, _scroller.ScrollX - ScrollStep);
         await _scroller.ScrollToAsync(x, 0, true);
     }
 
-    private async void OnRightArrowClicked()
+    private async Task OnRightArrowClicked()
     {
         if (_scroller == null) return;
         double contentWidth = _buttonGrid.Width;
@@ -118,6 +127,21 @@ public partial class ArticleButtonControl : ContentView
         double maxX = Math.Max(0, contentWidth - viewportWidth);
         double x = Math.Min(maxX, _scroller.ScrollX + ScrollStep);
         await _scroller.ScrollToAsync(x, 0, true);
+    }
+
+    private async Task ScrollToStart()
+    {
+        if (_scroller == null) return;
+        await _scroller.ScrollToAsync(0, 0, true);
+    }
+
+    private async Task ScrollToEnd()
+    {
+        if (_scroller == null) return;
+        double contentWidth = _buttonGrid.Width;
+        double viewportWidth = _scroller.Width;
+        double maxX = Math.Max(0, contentWidth - viewportWidth);
+        await _scroller.ScrollToAsync(maxX, 0, true);
     }
 
     public void SetCategories(List<ArticleButtonModel> categories)
